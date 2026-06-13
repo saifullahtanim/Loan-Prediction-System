@@ -103,9 +103,9 @@
             background: linear-gradient(135deg, rgba(79, 70, 229, 0.03), rgba(124, 58, 237, 0.03));
             border: 1px solid rgba(99, 102, 241, 0.1);
             border-radius: 1.25rem;
-            padding: 0.8rem 0.9rem;
-            box-shadow: 0 18px 48px rgba(79, 70, 229, 0.06);
-            max-width: 1100px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 18px 40px rgba(79, 70, 229, 0.06);
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -114,15 +114,15 @@
             padding: 0.6rem 0.6rem;
             background: linear-gradient(180deg, #ffffff, #fbfbfe);
             border-radius: 0.9rem;
-            border: 1px solid rgba(226, 232, 240, 0.6);
-            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
-            transition: all 140ms ease;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
         }
 
         .result-stat:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-            border-color: rgba(99, 102, 241, 0.16);
+            transform: translateY(-6px) scale(1.005);
+            box-shadow: 0 28px 60px rgba(15, 23, 42, 0.08);
+            border-color: rgba(99, 102, 241, 0.26);
         }
 
         .result-label {
@@ -139,6 +139,13 @@
             font-weight: 900;
             color: #0f172a;
             line-height: 1.02;
+        }
+
+        .result-subtext {
+            margin-top: 0.35rem;
+            font-size: 0.78rem;
+            color: #9ca3af;
+            font-weight: 600;
         }
 
         .result-value.approved {
@@ -160,6 +167,102 @@
             border: 1px solid rgba(226, 232, 240, 0.6);
             padding: 0.75rem;
             box-shadow: 0 6px 18px rgba(79, 70, 229, 0.03) inset;
+        }
+
+        .result-reasons-grid {
+            display: grid;
+            grid-template-columns: 0.45fr 0.55fr;
+            /* slightly wider left column to prevent wrapping */
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .factors-box {
+            background: #ffffff;
+            border-radius: 0.85rem;
+            border: 1px solid rgba(226, 232, 240, 0.75);
+            padding: 1rem 1rem 1rem 0.65rem;
+            min-height: 190px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .recommendations {
+            background: #ffffff;
+            border-radius: 0.85rem;
+            border: 1px solid rgba(226, 232, 240, 0.75);
+            padding: 1rem 1rem 1rem 1rem;
+            /* compact to fit three recommendation lines */
+            min-height: 170px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            align-items: flex-start;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .factors-box .result-reasons-title,
+        .recommendations .rec-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            text-align: left;
+            width: 100%;
+        }
+
+        .factors-box .space-y-2 {
+            flex: 1;
+        }
+
+        .recommendations ul {
+            margin: 0;
+            padding: 0 0 0 0.6rem;
+            list-style: none;
+            width: 100%;
+        }
+
+        .recommendations li {
+            margin-bottom: 0.45rem;
+            line-height: 1.28;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            padding: 0.18rem 0;
+        }
+
+        .recommendations .reason-bullet {
+            color: #4338ca;
+            font-weight: 900;
+            font-size: 1rem;
+            margin-top: 0.12rem;
+            flex-shrink: 0;
+        }
+
+        .recommendations .rec-text {
+            color: #4b5563;
+            font-size: 0.80rem;
+            display: block;
+            flex: 1;
+        }
+
+        .rec-note {
+            margin-top: 0.5rem;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+
+        @media (max-width: 880px) {
+            .result-reasons-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .result-reasons-title {
@@ -193,9 +296,9 @@
         }
 
         .result-footer {
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(226, 232, 240, 0.55);
+            margin-top: 0.25rem;
+            padding-top: 0.35rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.45);
             display: flex;
             gap: 0.5rem;
             align-items: center;
@@ -204,9 +307,10 @@
         }
 
         .result-timestamp {
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             color: #94a3b8;
             font-weight: 500;
+            margin-top: 0.1rem;
         }
 
         .hero-heading {
@@ -442,30 +546,84 @@
                                     <p class="result-label">📋 Decision</p>
                                     {% if last_result.decision == "Approved" %}
                                     <p class="result-value approved">✓ Approved</p>
+                                    <p class="result-subtext text-green-600">Loan Eligible</p>
                                     {% else %}
                                     <p class="result-value rejected">✗ Rejected</p>
+                                    <p class="result-subtext text-red-600">Not eligible — manual review recommended</p>
                                     {% endif %}
                                 </div>
                                 <div class="result-stat">
                                     <p class="result-label">🎯 Confidence</p>
                                     <p class="result-value result-accent">{{ last_result.score }}%</p>
+                                    <p class="result-subtext">
+                                        {% if last_result.score|float >= 75 %}
+                                        High Confidence
+                                        {% elif last_result.score|float >= 50 %}
+                                        Moderate Confidence
+                                        {% else %}
+                                        Low Confidence
+                                        {% endif %}
+                                    </p>
                                 </div>
                                 <div class="result-stat">
                                     <p class="result-label">⚠️ Risk Level</p>
-                                    <p
-                                        class="result-value {% if last_result.risk_level == 'Low Risk' %}text-green-600{% elif last_result.risk_level == 'Medium Risk' %}text-yellow-600{% else %}text-red-600{% endif %}">
-                                        {{ last_result.risk_level }}</p>
+                                    {# Map displayed risk text to softer wording when appropriate #}
+                                    {% set displayed_risk = last_result.risk_level %}
+                                    {% if last_result.risk_level == 'High Risk' and last_result.decision == 'Approved'
+                                    and last_result.score|float >= 50 %}
+                                    {% set displayed_risk = 'Risk Assessment' %}
+                                    {% endif %}
+                                    {% set risk_color = 'text-red-600' %}
+                                    {% if last_result.risk_level == 'Low Risk' %}
+                                    {% set risk_color = 'text-green-600' %}
+                                    {% elif last_result.risk_level == 'Medium Risk' %}
+                                    {% set risk_color = 'text-yellow-600' %}
+                                    {% elif displayed_risk == 'Risk Assessment' %}
+                                    {% set risk_color = 'text-yellow-600' %}
+                                    {% endif %}
+                                    <p class="result-value {{ risk_color }}">{{ displayed_risk }}</p>
+                                    {% if displayed_risk == 'Risk Assessment' %}
+                                    {% if last_result.score|float >= 75 %}
+                                    <p class="result-subtext text-yellow-600">Additional review recommended</p>
+                                    {% elif last_result.score|float >= 50 %}
+                                    <p class="result-subtext text-yellow-600">Further verification may be required</p>
+                                    {% else %}
+                                    <p class="result-subtext text-yellow-600">Moderate review recommended</p>
+                                    {% endif %}
+                                    {% elif last_result.risk_level == 'High Risk' %}
+                                    <p class="result-subtext text-red-600">Requires additional review</p>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="result-reasons">
-                                <p class="result-reasons-title">💡 Key Decision Factors</p>
-                                <div class="space-y-2">
-                                    {% for reason in last_result.reasons %}
-                                    <div class="reason-item">
-                                        <span class="reason-bullet">→</span>
-                                        <span>{{ reason }}</span>
+                                <div class="result-reasons-grid">
+                                    <div class="factors-box">
+                                        <p class="result-reasons-title">💡 Key Decision Factors</p>
+                                        <div class="space-y-2">
+                                            {% for reason in last_result.reasons %}
+                                            <div class="reason-item">
+                                                <span class="reason-bullet">→</span>
+                                                <span>{{ reason }}</span>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
-                                    {% endfor %}
+                                    <div class="recommendations">
+                                        <div class="rec-title">💡 Recommendations</div>
+                                        {% set recs = [
+                                        'Maintain a stable income source',
+                                        'Continue regular banking transactions',
+                                        'Avoid taking additional debt'
+                                        ] %}
+                                        <ul>
+                                            {% for r in recs %}
+                                            <li><span class="reason-bullet">→</span><span class="rec-text">{{ r
+                                                    }}</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                        <p class="rec-note">Note: Results are based on the information provided by the
+                                            applicant and are intended for decision-support purposes only.</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="result-footer">
@@ -474,7 +632,13 @@
                                     class="primary-btn inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all">
                                     ⬇️ Download PDF Report
                                 </a>
-                                <p class="result-timestamp">Submitted: {{ last_result.submitted_at }}</p>
+                                <button id="start-new-btn" type="button" title="Start a new application"
+                                    class="primary-btn inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold ml-3 text-white shadow-md hover:shadow-lg transition-all">
+                                    Start New Application
+                                </button>
+                                <p class="result-timestamp" data-raw="{{ last_result.submitted_at }}">Report Generated:
+                                    {{
+                                    last_result.submitted_at }}</p>
                             </div>
                         </div>
                         {% else %}
@@ -522,13 +686,8 @@
                                 </div>
                                 <div>
                                     <label class="field-label" for="dependents">Dependents</label>
-                                    <select class="field-select" id="dependents" name="dependents" required>
-                                        <option value="">Select Dependents</option>
-                                        <option value="0">0</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                    </select>
+                                    <input type="number" class="field-input" id="dependents" name="dependents" min="0"
+                                        max="20" placeholder="Enter number of dependents" required>
                                 </div>
                                 <div>
                                     <label class="field-label" for="education">Education</label>
@@ -796,15 +955,15 @@
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Application Statistics</h3>
                     <div class="grid gap-8 sm:grid-cols-3">
                         <div class="text-center">
-                            <p class="text-3xl font-bold text-green-600">{{ approved_count }}</p>
+                            <p class="text-3xl font-bold text-green-600" id="approved-count">{{ approved_count }}</p>
                             <p class="mt-1 text-sm text-gray-600">Approved Applications</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-3xl font-bold text-red-600">{{ rejected_count }}</p>
+                            <p class="text-3xl font-bold text-red-600" id="rejected-count">{{ rejected_count }}</p>
                             <p class="mt-1 text-sm text-gray-600">Rejected Applications</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-3xl font-bold text-indigo-600">{{ total_count }}</p>
+                            <p class="text-3xl font-bold text-indigo-600" id="total-count">{{ total_count }}</p>
                             <p class="mt-1 text-sm text-gray-600">Total Applications</p>
                         </div>
                     </div>
@@ -817,11 +976,12 @@
                         <p class="text-xs font-semibold text-gray-600">Approval Rate</p>
                         <div class="mt-2 mx-auto" style="max-width:320px;">
                             <div class="w-full bg-gray-100 approval-bar">
-                                <div class="fill"
+                                <div class="fill" id="approval-fill"
                                     style="width: {{ (approved_count / total_count * 100) if total_count else 0 }}%">
                                 </div>
                             </div>
-                            <p class="mt-2 text-sm font-medium text-gray-700">{{ (approved_count * 100 / total_count) |
+                            <p class="mt-2 text-sm font-medium text-gray-700" id="approval-percent">{{ (approved_count *
+                                100 / total_count) |
                                 round(1) if total_count else 0 }}% Approved</p>
                         </div>
                     </div>
@@ -842,7 +1002,9 @@
                         <div class="flex items-center gap-3">
                             <div class="text-sm text-gray-600 text-right">
                                 <p><span class="font-semibold text-gray-900">Score:</span> {{ entry.score }}</p>
-                                <p><span class="font-semibold text-gray-900">Time:</span> {{ entry.submitted_at }}</p>
+                                <p><span class="font-semibold text-gray-900">Time:</span> <span
+                                        class="history-timestamp" data-raw="{{ entry.submitted_at }}">{{
+                                        entry.submitted_at }}</span></p>
                             </div>
                             <div class="flex items-center gap-2">
                                 <a href="{{ url_for('download_reports') }}?application_id={{ entry.application_id }}"
@@ -851,7 +1013,7 @@
                                     Download
                                 </a>
                                 <form action="{{ url_for('delete_history_item', application_id=entry.application_id) }}"
-                                    method="POST" onsubmit="return confirm('Delete this history item?');">
+                                    method="POST" data-ajax="true">
                                     <button type="submit"
                                         class="rounded-full border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50">
                                         Delete
@@ -918,7 +1080,12 @@
 
                         <div class="mt-4 rounded-2xl bg-indigo-50 border border-indigo-100 p-4">
                             <p class="text-sm font-semibold text-gray-900">Decision Reasoning</p>
+                            {% if entry.decision and ('approved' in entry.decision|lower) %}
+                            <p class="mt-2 text-sm text-gray-700">The application was approved based on strong annual
+                                income, favorable loan-to-income ratio, and low debt obligations.</p>
+                            {% else %}
                             <p class="mt-2 text-sm text-gray-700">{{ entry.summary }}</p>
+                            {% endif %}
                             <ul class="mt-3 space-y-2 text-sm text-gray-600 list-disc pl-5">
                                 {% for reason in entry.reasons %}
                                 <li>{{ reason }}</li>
@@ -1214,17 +1381,89 @@
             });
         }
 
+        // Make chart instance accessible globally so it can be updated after deletes
+        window.statsChart = null;
+
+        // Attach AJAX delete handlers to any form with data-ajax="true"
+        function setupDeleteHandlers() {
+            const forms = document.querySelectorAll('form[data-ajax]');
+            forms.forEach(form => {
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    if (!confirm('Delete this history item?')) return;
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) submitBtn.disabled = true;
+                    try {
+                        const formData = new FormData(form);
+                        const res = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: formData,
+                            credentials: 'same-origin'
+                        });
+
+                        if (!res.ok) {
+                            const txt = await res.text();
+                            console.error('Delete failed', txt);
+                            showNotification('Delete failed. Try again.', 'error');
+                            if (submitBtn) submitBtn.disabled = false;
+                            return;
+                        }
+
+                        const data = await res.json().catch(() => null);
+
+                        // Remove the entry element from the DOM
+                        const entry = form.closest('[data-application-id]');
+                        if (entry) entry.remove();
+
+                        // Update counters and approval bar if API returned counts
+                        if (data && typeof data.approved_count !== 'undefined') {
+                            const ac = document.getElementById('approved-count');
+                            const rc = document.getElementById('rejected-count');
+                            const tc = document.getElementById('total-count');
+                            const af = document.getElementById('approval-fill');
+                            const ap = document.getElementById('approval-percent');
+                            if (ac) ac.textContent = data.approved_count;
+                            if (rc) rc.textContent = data.rejected_count;
+                            if (tc) tc.textContent = data.total_count;
+                            const pct = data.total_count ? ((data.approved_count / data.total_count) * 100).toFixed(1) : 0;
+                            if (af) af.style.width = pct + '%';
+                            if (ap) ap.textContent = pct + '% Approved';
+
+                            if (window.statsChart) {
+                                try {
+                                    window.statsChart.data.datasets[0].data = [data.approved_count, data.rejected_count];
+                                    window.statsChart.update();
+                                } catch (e) {
+                                    console.error('Failed updating chart', e);
+                                }
+                            }
+                        }
+
+                        showNotification((data && data.message) ? data.message : 'History item deleted successfully.', 'success');
+                    } catch (err) {
+                        console.error(err);
+                        showNotification('Delete failed. Try again.', 'error');
+                    } finally {
+                        if (submitBtn) submitBtn.disabled = false;
+                    }
+                });
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             setupFieldValidation();
 
             const statsCanvas = document.getElementById('statsChart');
-            const approved = {{ approved_count }
-        };
-        const rejected = {{ rejected_count }};
+            const approved = {{ approved_count | default (0) | int
+        }};
+        const rejected = {{ rejected_count | default (0) | int }};
 
         if (statsCanvas && (approved > 0 || rejected > 0)) {
             const ctx = statsCanvas.getContext('2d');
-            new Chart(ctx, {
+            window.statsChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Approved', 'Rejected'],
@@ -1246,6 +1485,30 @@
             });
         }
 
+        // Format all timestamps (elements with data-raw) to 'DD Mon YYYY • hh:mm AM/PM'
+        (function formatAllTimestamps() {
+            const els = document.querySelectorAll('[data-raw]');
+            if (!els || els.length === 0) return;
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            els.forEach(el => {
+                const raw = el.getAttribute('data-raw') || '';
+                if (!raw) return;
+                let d = new Date(raw);
+                if (isNaN(d)) d = new Date(raw.replace(' ', 'T'));
+                if (isNaN(d)) return;
+                const day = String(d.getDate()).padStart(2, '0');
+                const mon = months[d.getMonth()];
+                const year = d.getFullYear();
+                let hrs = d.getHours();
+                const mins = String(d.getMinutes()).padStart(2, '0');
+                const ampm = hrs >= 12 ? 'PM' : 'AM';
+                hrs = hrs % 12; hrs = hrs ? hrs : 12;
+                const formatted = `${day} ${mon} ${year} • ${String(hrs).padStart(2, '0')}:${mins} ${ampm}`;
+                if (el.classList.contains('result-timestamp')) el.textContent = 'Report Generated: ' + formatted;
+                else el.textContent = formatted;
+            });
+        })();
+
         const backToTop = document.getElementById('backToTop');
         if (backToTop) {
             window.addEventListener('scroll', () => {
@@ -1258,6 +1521,46 @@
 
             backToTop.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        // Initialize AJAX delete handlers for history items
+        setupDeleteHandlers();
+
+        // Start new application: hide result, reset form, and focus first input
+        const startNewBtn = document.getElementById('start-new-btn');
+        if (startNewBtn) {
+            startNewBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const root = document.getElementById('prediction-result-export');
+                if (root) root.style.display = 'none';
+
+                const form = document.querySelector('form[action="/predict"]');
+                if (form) {
+                    try {
+                        form.reset();
+                    } catch (err) {
+                        console.warn('Form reset failed', err);
+                    }
+                    // remove any validation classes
+                    const invalids = form.querySelectorAll('.is-invalid');
+                    invalids.forEach(n => n.classList.remove('is-invalid'));
+                }
+
+                const first = document.querySelector('.field-input, .field-select');
+                if (first) {
+                    first.focus();
+                    const y = first.getBoundingClientRect().top + window.scrollY - 80;
+                    window.scrollTo({ top: y > 0 ? y : 0, behavior: 'smooth' });
+                }
+
+                // Replace browser URL to remove result_id so reload won't show previous result
+                // Redirect to a fresh predict page so the server renders the initial view
+                try {
+                    window.location.href = '/predict';
+                    return;
+                } catch (err) {
+                    console.warn('Redirect to /predict failed', err);
+                }
             });
         }
         });

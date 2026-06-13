@@ -192,7 +192,9 @@
                 </div>
                 <div>
                     <h1>Loan Prediction Report</h1>
-                    <div class="meta">Generated: {{ generated_at if generated_at else now() }}</div>
+                    <div class="meta">Report Generated: <span class="pdf-ts"
+                            data-raw="{{ generated_at if generated_at else now() }}">{{ generated_at if generated_at
+                            else now() }}</span></div>
                 </div>
             </div>
 
@@ -211,7 +213,8 @@
                 <div style="flex:1">
                     <div style="font-size:13px; color:#64748b;">Application</div>
                     <div style="font-weight:700; font-size:16px; color:#0f172a">ID: {{ e.application_id }}</div>
-                    <div style="font-size:13px; color:#475569; margin-top:6px">Submitted: {{ e.submitted_at }}</div>
+                    <div style="font-size:13px; color:#475569; margin-top:6px">Submitted: <span class="pdf-ts"
+                            data-raw="{{ e.submitted_at }}">{{ e.submitted_at }}</span></div>
                 </div>
                 <div>
                     {% set dec = e.decision or e.result or '' %}
@@ -263,7 +266,8 @@
                     <p class="meta" style="margin:0 0 6px 0;">Model</p>
                     <div style="font-size:13px; color:#334155;">
                         <div>Score: {{ e.score if e.score is defined else '' }}</div>
-                        <div>Prediction Time: {{ e.submitted_at }}</div>
+                        <div>Prediction Time: <span class="pdf-ts" data-raw="{{ e.submitted_at }}">{{ e.submitted_at
+                                }}</span></div>
                         <div>Application ID: {{ e.application_id }}</div>
                     </div>
                 </div>
@@ -279,6 +283,20 @@
                 </ol>
             </div>
             {% endif %}
+
+            <div style="margin-top:12px;">
+                <div style="font-weight:700; margin-bottom:6px;">Recommendations</div>
+                <div style="background:#fff; border:1px solid #eef2ff; padding:12px; border-radius:10px;">
+                    <ol style="margin:0 0 6px 18px; color:#334155; font-size:13px;">
+                        <li>Maintain a stable income source</li>
+                        <li>Continue regular banking transactions</li>
+                        <li>Avoid taking additional debt</li>
+                    </ol>
+                    <div style="font-size:13px; color:#6b7280; margin-top:6px; font-weight:600;">Note: Results are based
+                        on the information provided by the applicant and are intended for decision-support purposes
+                        only.</div>
+                </div>
+            </div>
 
             {% if members %}
             <div class="members">
@@ -304,6 +322,44 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script>
+        // Format timestamps in PDF to "DD Mon YYYY • hh:mm AM/PM" (matches prediction.html)
+        function _formatPdfDatetime(raw) {
+            if (!raw) return '';
+            // try to parse various formats
+            var d = new Date(raw);
+            if (isNaN(d)) {
+                // try replace space with T for common datetime strings
+                d = new Date((raw + '').replace(' ', 'T'));
+            }
+            if (isNaN(d)) return raw;
+            var day = String(d.getDate()).padStart(2, '0');
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var month = months[d.getMonth()];
+            var year = d.getFullYear();
+            var hours = d.getHours();
+            var minutes = String(d.getMinutes()).padStart(2, '0');
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            return day + ' ' + month + ' ' + year + ' • ' + (hours + ':' + minutes + ' ' + ampm);
+        }
+
+        function formatPdfTimestamps() {
+            try {
+                var nodes = document.querySelectorAll('.pdf-ts');
+                nodes.forEach(function (n) {
+                    var raw = n.getAttribute('data-raw');
+                    if (!raw) return;
+                    n.textContent = _formatPdfDatetime(raw);
+                });
+            } catch (e) {
+                console.warn('PDF timestamp formatting failed', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            formatPdfTimestamps();
+        });
+
         // If rendered with `auto_download=True`, auto-run html2pdf
         (function () {
             var auto = false;
@@ -322,7 +378,7 @@
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
                 // small delay to allow fonts/images to render
-                setTimeout(function () { html2pdf().set(opt).from(element).save(); }, 350);
+                setTimeout(function () { formatPdfTimestamps(); html2pdf().set(opt).from(element).save(); }, 350);
             }
         })();
     </script>
